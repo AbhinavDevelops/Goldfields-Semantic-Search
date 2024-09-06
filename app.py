@@ -1,8 +1,8 @@
-from flask import Flask, request, jsonify
-import faiss
-from sentence_transformers import SentenceTransformer
-import numpy as np
-import pandas as pd
+from flask import Flask, request, jsonify # type: ignore
+import faiss # type: ignore
+from sentence_transformers import SentenceTransformer # type: ignore
+import numpy as np # type: ignore
+import pandas as pd # type: ignore
 import os
 
 app = Flask(__name__)
