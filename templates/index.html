@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldfields Search Page</title>
+
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.svg') }}" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+            width: 200px;
+            /* You can adjust the width of the logo here */
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <img src="{{ url_for('static', filename='images/goldfields_logo.jpg') }}" alt="Gold Fields Logo" width="200">
+
+        <h1>Material Search</h1>
+        <input type="text" id="searchQuery" placeholder="Enter your search query">
+        <button onclick="performSearch()">Search</button>
+
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        function performSearch() {
+            const query = document.getElementById('searchQuery').value;
+            if (!query) {
+                alert('Please enter a query');
+                return;
+            }
+
+            fetch(`/search?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById('results');
+                    resultsDiv.innerHTML = '';
+
+                    if (data.results && data.results.length > 0) {
+                        data.results.forEach(item => {
+                            const div = document.createElement('div');
+                            div.className = 'result-item';
+                            div.textContent = item;
+                            resultsDiv.appendChild(div);
+                        });
+                    } else {
+                        resultsDiv.innerHTML = '<p>No results found.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching results:', error);
+                    alert('Error fetching results');
+                });
+        }
+    </script>
+
+</body>
+
+</html>

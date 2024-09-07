@@ -1,8 +1,8 @@
-from flask import Flask, request, jsonify # type: ignore
-import faiss # type: ignore
-from sentence_transformers import SentenceTransformer # type: ignore
-import numpy as np # type: ignore
-import pandas as pd # type: ignore
+from flask import Flask, request, jsonify, render_template
+import faiss
+from sentence_transformers import SentenceTransformer
+import numpy as np
+import pandas as pd
 import os
 
 app = Flask(__name__)
@@ -27,6 +27,11 @@ else:
     index = faiss.IndexFlatL2(embeddings.shape[1])
     index.add(embeddings)
     faiss.write_index(index, index_file)
+
+
+@app.route('/')
+def landing():
+    return render_template('index.html')
 
 
 @app.route('/search', methods=['GET'])
