@@ -11,6 +11,12 @@ app = Flask(__name__)
 df = pd.read_excel('data.XLSX')
 desc = df["Material Description"].to_list()
 
+bin_loc = df["Bin Location"].to_list()
+sloc = df["SLoc"].to_list()
+material = df["Material"].to_list()
+bUN = df["BUn"].to_list()
+stock_qty = df["Storage Location Stock Qty"].to_list()
+
 embeddings_file = 'embeddings.npy'
 index_file = 'faiss_index.idx'
 
@@ -31,7 +37,7 @@ else:
 
 @app.route('/')
 def landing():
-    return render_template('index.html')
+    return render_template('index2.html')
 
 
 @app.route('/search', methods=['GET'])
@@ -42,7 +48,17 @@ def search():
 
     query_embedding = model.encode([query])
     D, I = index.search(np.array(query_embedding).astype('float32'), 50)
-    results = [desc[idx] for idx in I[0]]
+
+    results = []
+    for idx in I[0]:
+        results.append({
+            "description": desc[idx],
+            "bin_location": bin_loc[idx],
+            "sloc": sloc[idx],
+            "material": material[idx],
+            "bUN": bUN[idx],
+            "stock_qty": stock_qty[idx]
+        })
 
     return jsonify({"results": results})
 

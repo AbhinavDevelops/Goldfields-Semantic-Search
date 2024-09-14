@@ -15,7 +15,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
@@ -60,18 +60,23 @@
 
             /* Add these properties to enable scrolling */
             max-height: 400px;
-            /* Set a maximum height for the container */
             overflow-y: auto;
-            /* Enable vertical scrolling */
         }
 
-        .result-item {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .result-item:last-child {
-            border-bottom: none;
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
@@ -103,21 +108,38 @@
                     resultsDiv.innerHTML = '';
 
                     if (data.results && data.results.length > 0) {
-                        data.results.forEach(item => {
-                            const div = document.createElement('div');
-                            div.className = 'result-item';
+                        // Create a table
+                        const table = document.createElement('table');
+                        const thead = document.createElement('thead');
+                        const tbody = document.createElement('tbody');
 
-                            // Display all relevant columns
-                            div.innerHTML = `
-                                <strong>Description:</strong> ${item.description} <br>
-                                <strong>Bin Location:</strong> ${item.bin_location} <br>
-                                <strong>SLoc:</strong> ${item.sloc} <br>
-                                <strong>Material:</strong> ${item.material} <br>
-                                <strong>BUn:</strong> ${item.bUN} <br>
-                                <strong>Stock Qty:</strong> ${item.stock_qty}
-                            `;
-                            resultsDiv.appendChild(div);
+                        // Create table headers
+                        const headers = ['Description', 'Bin Location', 'SLoc', 'Material', 'BUn', 'Stock Qty'];
+                        const headerRow = document.createElement('tr');
+                        headers.forEach(header => {
+                            const th = document.createElement('th');
+                            th.textContent = header;
+                            headerRow.appendChild(th);
                         });
+                        thead.appendChild(headerRow);
+                        table.appendChild(thead);
+
+                        // Create table rows
+                        data.results.forEach(item => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${item.description}</td>
+                                <td>${item.bin_location}</td>
+                                <td>${item.sloc}</td>
+                                <td>${item.material}</td>
+                                <td>${item.bUN}</td>
+                                <td>${item.stock_qty}</td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+
+                        table.appendChild(tbody);
+                        resultsDiv.appendChild(table);
                     } else {
                         resultsDiv.innerHTML = '<p>No results found.</p>';
                     }
